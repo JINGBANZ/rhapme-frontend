@@ -14,7 +14,7 @@ import Navbar from "./components/layout/Navbar";
 import themeObject from "./util/theme";
 import AuthRoute from "./util/AuthRoute";
 // Pages
-import home from "./pages/home";
+import Home from "./pages/home";
 import login from "./pages/login";
 import signup from "./pages/signup";
 import user from "./pages/user";
@@ -58,7 +58,7 @@ class App extends Component {
             <Navbar />
             <div className="container">
               <Switch>
-                <AuthRoute exact path="/" component={home} />
+                <AuthRoute exact path="/" component={Home} />
                 <Route exact path="/landing" component={landing} />
                 <AuthRoute exact path="/login" component={login} />
                 <AuthRoute exact path="/signup" component={signup} />

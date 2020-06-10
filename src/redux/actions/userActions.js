@@ -57,6 +57,7 @@ export const logoutUser = () => (dispatch) => {
   delete axios.defaults.headers.common["Authorization"];
   //remove the authorization header from axios
   dispatch({ type: SET_UNAUTHENTICATED });
+  window.location.href = "/";
 };
 
 export const getUserData = () => (dispatch) => {
