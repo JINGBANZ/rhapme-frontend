@@ -1,11 +1,8 @@
 import React, { Component } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 // this can be used to bring in global theme, and then use it.
-
 import PropTypes from "prop-types";
 //built in method in React for type checking
-import AppIcon from "../images/icon.png";
-import { Link } from "react-router-dom";
 
 // MUI Stuff
 import Grid from "@material-ui/core/Grid";
@@ -45,8 +42,6 @@ class login extends Component {
       password: this.state.password,
     };
     this.props.loginUser(userData, this.props.history);
-    //this history can be use to redirect us on success
-    //this.props.history.push('/') redirect to the homepage
   };
 
   //event will have a target property which will point to the element that triger it
@@ -142,6 +137,7 @@ login.propTypes = {
   loginUser: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
   UI: PropTypes.object.isRequired,
+  code: PropTypes.string.isRequired,
 };
 //it take our global state, and we take what we need
 // all of these will be in our props, so we also define props types above

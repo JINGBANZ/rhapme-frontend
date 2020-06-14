@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import withStyles from "@material-ui/core/styles/withStyles";
 import Signup from "./signup";
 import Login from "./login";
-
 //MUI Stuff
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
@@ -40,15 +39,18 @@ class landing extends Component {
     super();
     this.state = {
       tab: 0,
-      code: "",
+      index: "",
+      selected: null,
       options: [
         {
           name: "university of southern california",
           code: "@usc.edu",
+          title: "USC",
         },
         {
           name: "ucla",
           code: "@ucla.edu",
+          title: "UCLA",
         },
       ],
     };
@@ -56,20 +58,31 @@ class landing extends Component {
 
   handleChange = (event) => {
     this.setState({
-      [event.target.name]: event.target.value,
+      selected:
+        event.target.value === ""
+          ? null
+          : this.state.options[event.target.value],
+      index: event.target.value,
     });
   };
   render() {
     const { classes } = this.props;
 
     let loginAndSignup =
-      this.state.code.length === 0 ? null : (
+      this.state.selected === null ? null : (
         <div>
           <TabPanel value={this.state.tab} index={0}>
-            <Login code={this.state.code} />
+            <Login
+              code={this.state.selected.code}
+              history={this.props.history}
+            />
           </TabPanel>
           <TabPanel value={this.state.tab} index={1}>
-            <Signup code={this.state.code} />
+            <Signup
+              code={this.state.selected.code}
+              title={this.state.selected.title}
+              history={this.props.history}
+            />
           </TabPanel>
           <AppBar position="static">
             <Tabs
@@ -92,18 +105,17 @@ class landing extends Component {
         <Grid item sm>
           <TextField
             id="code"
-            name="code"
             select
             label="University"
-            value={this.state.code}
             onChange={this.handleChange}
+            value={this.state.index}
             SelectProps={{
               native: true,
             }}
           >
             <option key="none" value="" />
-            {this.state.options.map((option) => (
-              <option key={option.code} value={option.code}>
+            {this.state.options.map((option, index) => (
+              <option key={index} value={index}>
                 {option.name}
               </option>
             ))}

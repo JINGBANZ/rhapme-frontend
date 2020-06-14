@@ -16,11 +16,8 @@ export const loginUser = (userData, history) => (dispatch) => {
     .post("/login", userData)
     .then((res) => {
       setAuthorizationHeader(res.data.token);
-      dispatch(getUserData());
+      dispatch(getUserData(history));
       dispatch({ type: CLEAR_ERRORS });
-      // history.push("/");
-      //this one is not working, because it will not run if it is called within the nested component. Therefore only the rendered page component can call this function for it to work properly.
-      window.location.href = "/";
     })
     .catch((err) => {
       if (err.response && err.response.data) {
@@ -38,9 +35,8 @@ export const signupUser = (newUserData, history) => (dispatch) => {
     .post("/signup", newUserData)
     .then((res) => {
       setAuthorizationHeader(res.data.token);
-      dispatch(getUserData());
+      dispatch(getUserData(history));
       dispatch({ type: CLEAR_ERRORS });
-      window.location.href = "/";
     })
     .catch((err) => {
       if (err.response && err.response.data) {
@@ -60,7 +56,7 @@ export const logoutUser = () => (dispatch) => {
   window.location.href = "/";
 };
 
-export const getUserData = () => (dispatch) => {
+export const getUserData = (history) => (dispatch) => {
   dispatch({ type: LOADING_USER });
   axios
     .get("/user")
@@ -70,6 +66,11 @@ export const getUserData = () => (dispatch) => {
         payload: res.data,
         //payload is what we send to a reducer, and reducer done something with it
       });
+    })
+    .then(() => {
+      if (history !== undefined) {
+        history.push("/");
+      }
     })
     .catch((err) => console.log(err));
 };

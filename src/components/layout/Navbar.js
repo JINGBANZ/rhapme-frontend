@@ -10,13 +10,21 @@ import Notifications from "./Notifications";
 // so then you can use these elements to build your page
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
+import Button from "@material-ui/core/Button";
 // import Button from "@material-ui/core/Button";
 // Icons
 import HomeIcon from "@material-ui/icons/Home";
 
 class Navbar extends Component {
   render() {
-    const { authenticated } = this.props;
+    const { authenticated, title } = this.props;
+
+    let home =
+      title === undefined ? (
+        <HomeIcon />
+      ) : (
+        <span style={{ color: "#fff" }}>{title}</span>
+      );
 
     let navbar = !authenticated ? null : (
       <AppBar>
@@ -24,9 +32,7 @@ class Navbar extends Component {
           <Fragment>
             <PostScream />
             <Link to="/">
-              <MyButton tip="Home">
-                <HomeIcon />
-              </MyButton>
+              <MyButton tip="Home">{home}</MyButton>
             </Link>
             <Notifications />
           </Fragment>
@@ -39,10 +45,12 @@ class Navbar extends Component {
 
 Navbar.propTypes = {
   authenticated: PropTypes.bool.isRequired,
+  title: PropTypes.string,
 };
 
 const mapStateToProps = (state) => ({
   authenticated: state.user.authenticated,
+  title: state.user.credentials.title,
 });
 
 export default connect(mapStateToProps)(Navbar);

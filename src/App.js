@@ -31,7 +31,6 @@ const token = localStorage.FBIdToken;
 if (token) {
   //decode the json web token
   const decodedToken = jwtDecode(token);
-  console.log(decodedToken);
   //it will have a property call exp
   //if you pass new Date(decodedToken.exp * 1000), you know when it will expired
   //decodedToken.exp * 1000 is expired time

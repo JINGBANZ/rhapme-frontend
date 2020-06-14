@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 import PropTypes from "prop-types";
-import AppIcon from "../images/icon.png";
-import { Link } from "react-router-dom";
 
 // MUI Stuff
 import Grid from "@material-ui/core/Grid";
@@ -43,6 +41,7 @@ class signup extends Component {
       confirmPassword: this.state.confirmPassword,
       username: this.state.username,
       code: this.props.code,
+      title: this.props.title,
     };
     this.props.signupUser(newUserData, this.props.history);
   };
@@ -153,6 +152,8 @@ signup.propTypes = {
   user: PropTypes.object.isRequired,
   UI: PropTypes.object.isRequired,
   signupUser: PropTypes.func.isRequired,
+  code: PropTypes.string.isRequired,
+  title: PropTypes.string,
 };
 
 const mapStateToProps = (state) => ({
