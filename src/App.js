@@ -19,6 +19,7 @@ import login from "./pages/login";
 import signup from "./pages/signup";
 import user from "./pages/user";
 import landing from "./pages/landing";
+import expandedPost from "./pages/expandedPost";
 
 import axios from "axios";
 
@@ -45,7 +46,6 @@ if (token) {
     store.dispatch(getUserData());
   }
 }
-
 class App extends Component {
   render() {
     return (
@@ -65,7 +65,7 @@ class App extends Component {
                 <AuthRoute
                   exact
                   path="/users/:handle/scream/:screamId"
-                  component={user}
+                  component={expandedPost}
                 />
               </Switch>
             </div>

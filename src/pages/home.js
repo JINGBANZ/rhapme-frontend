@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import Grid from "@material-ui/core/Grid";
 import PropTypes from "prop-types";
 
@@ -15,11 +15,12 @@ class home extends Component {
   }
   render() {
     const { screams, loading } = this.props.data;
-    let recentScreamsMarkup = !loading ? (
-      screams.map((scream) => <Scream key={scream.screamId} scream={scream} />)
-    ) : (
-      <ScreamSkeleton />
-    );
+
+    let posts = screams.map((scream) => (
+      <Scream key={scream.screamId} scream={scream} />
+    ));
+
+    let recentScreamsMarkup = !loading ? posts : <ScreamSkeleton />;
     return (
       <Grid container spacing={16}>
         <Grid item sm={8} xs={12}>
