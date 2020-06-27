@@ -6,6 +6,7 @@ import {
   LIKE_SCREAM,
   UNLIKE_SCREAM,
   MARK_NOTIFICATIONS_READ,
+  SET_NOTIFICATION,
 } from "../types";
 
 //this is not the global state, it is just states inside userReducer, and would be assign to user object in global states
@@ -36,6 +37,11 @@ export default function (state = initialState, action) {
         ...action.payload,
         //spread these property sent from our server, which contains creadentials/likes/notification
         //and they will bind to corresponding state property
+      };
+    case SET_NOTIFICATION:
+      return {
+        ...state,
+        notifications: action.payload,
       };
     case LOADING_USER:
       return {

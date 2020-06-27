@@ -6,6 +6,7 @@ import {
   SET_UNAUTHENTICATED,
   LOADING_USER,
   MARK_NOTIFICATIONS_READ,
+  SET_NOTIFICATION,
 } from "../types";
 import axios from "axios";
 // input
@@ -59,12 +60,11 @@ export const logoutUser = () => (dispatch) => {
 export const getUserData = (history) => (dispatch) => {
   dispatch({ type: LOADING_USER });
   axios
-    .get("/user")
+    .get("/user/info")
     .then((res) => {
       dispatch({
         type: SET_USER,
         payload: res.data,
-        //payload is what we send to a reducer, and reducer done something with it
       });
     })
     .then(() => {
@@ -73,6 +73,15 @@ export const getUserData = (history) => (dispatch) => {
       }
     })
     .catch((err) => console.log(err));
+
+  // axios
+  //   .get("/user/notifications")
+  //   .then((res) => {
+  //     dispatch({ type: SET_NOTIFICATION, payload: res.data });
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   });
 };
 
 export const uploadImage = (formData) => (dispatch) => {

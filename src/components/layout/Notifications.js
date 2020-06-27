@@ -30,10 +30,10 @@ class Notifications extends Component {
   };
   //when you click on notification button, you mark all notification to read
   onMenuOpened = () => {
-    let unreadNotificationsIds = this.props.notifications
-      .filter((not) => !not.read)
-      .map((not) => not.notificationId);
-    this.props.markNotificationsRead(unreadNotificationsIds);
+    // let unreadNotificationsIds = this.props.notifications
+    //   .filter((not) => !not.read)
+    //   .map((not) => not.notificationId);
+    // this.props.markNotificationsRead(unreadNotificationsIds);
   };
   render() {
     const notifications = this.props.notifications;
@@ -118,7 +118,7 @@ class Notifications extends Component {
 
 Notifications.propTypes = {
   markNotificationsRead: PropTypes.func.isRequired,
-  notifications: PropTypes.array.isRequired,
+  notifications: PropTypes.array,
 };
 
 const mapStateToProps = (state) => ({

@@ -28,6 +28,9 @@ const theme = createMuiTheme(themeObject);
 axios.defaults.baseURL =
   "https://us-central1-test-a4386.cloudfunctions.net/api";
 
+// //test
+// axios.defaults.baseURL = "http://localhost:5000/test-a4386/us-central1/api";
+
 const token = localStorage.FBIdToken;
 if (token) {
   //decode the json web token

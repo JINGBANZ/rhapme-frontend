@@ -112,7 +112,7 @@ class expandedPost extends Component {
           <span>{commentCount}</span>
         </CardActions>
         <Grid container>
-          <CommentForm screamId={screamId} />
+          <CommentForm screamId={this.props.match.params.screamId} />
           {comments !== undefined && <Comments comments={comments} />}
         </Grid>
       </Card>
