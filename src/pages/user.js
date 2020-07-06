@@ -29,7 +29,7 @@ class user extends Component {
       .get(`/user/${handle}`)
       .then((res) => {
         this.setState({
-          profile: res.data.user,
+          profile: res.data.data.user,
         });
       })
       .catch((err) => console.log(err));

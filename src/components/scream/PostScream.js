@@ -14,6 +14,8 @@ import CloseIcon from "@material-ui/icons/Close";
 // Redux stuff
 import { connect } from "react-redux";
 import { postScream, clearErrors } from "../../redux/actions/dataActions";
+import ImageOutlinedIcon from "@material-ui/icons/ImageOutlined";
+import Snackbar from "@material-ui/core/Snackbar";
 
 const styles = (theme) => ({
   ...theme,
@@ -35,7 +37,9 @@ const styles = (theme) => ({
 class PostScream extends Component {
   state = {
     open: false,
+    openAlert: false,
     body: "",
+    img: null,
     errors: {},
   };
   componentWillReceiveProps(nextProps) {
@@ -45,7 +49,13 @@ class PostScream extends Component {
       });
     }
     if (!nextProps.UI.errors && !nextProps.UI.loading) {
-      this.setState({ body: "", open: false, errors: {} });
+      this.setState({
+        body: "",
+        open: false,
+        errors: {},
+        openAlert: false,
+        img: null,
+      });
     }
   }
   handleOpen = () => {
@@ -60,7 +70,28 @@ class PostScream extends Component {
   };
   handleSubmit = (event) => {
     event.preventDefault();
-    this.props.postScream({ body: this.state.body });
+    let formData = new FormData();
+    formData.append("body", this.state.body);
+    if (this.state.img.length > 0) {
+      for (let i = 0; i < this.state.img.length; i++) {
+        formData.append("img", this.state.img[i]);
+      }
+    }
+    this.props.postScream(formData);
+  };
+
+  upload = () => {
+    let dom = document.getElementById("_upload_image");
+    dom.click();
+
+    dom.addEventListener("input", () => {
+      if (dom.files.length > 4) {
+        dom.value = "";
+        this.setState({ openAlert: true });
+      } else {
+        this.setState({ img: dom.files });
+      }
+    });
   };
   render() {
     const { errors } = this.state;
@@ -101,6 +132,32 @@ class PostScream extends Component {
                 onChange={this.handleChange}
                 fullWidth
               />
+              <div>
+                <input
+                  type="file"
+                  style={{ display: "none" }}
+                  id="_upload_image"
+                  accept="image/jpeg,image/png"
+                  multiple="multiple"
+                />
+                <ImageOutlinedIcon
+                  className="upload-image"
+                  onClick={this.upload}
+                ></ImageOutlinedIcon>
+                <Snackbar
+                  open={this.state.openAlert}
+                  autoHideDuration={2000}
+                  onClose={() => this.setState({ openAlert: false })}
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "center",
+                  }}
+                >
+                  <div className="limit-tips">
+                    Upload at most four images , please select again!
+                  </div>
+                </Snackbar>
+              </div>
               <Button
                 type="submit"
                 variant="contained"

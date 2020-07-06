@@ -6,16 +6,14 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import PropTypes from "prop-types";
 import MyButton from "../../util/MyButton";
 import DeleteScream from "./DeleteScream";
-import ScreamDialog from "./ScreamDialog";
 import LikeButton from "./LikeButton";
+import Tools from "./Tools";
 // MUI Stuff
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import CardHeader from "@material-ui/core/CardHeader";
 import Avatar from "@material-ui/core/Avatar";
-import IconButton from "@material-ui/core/IconButton";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { CardActions } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -24,6 +22,7 @@ import ChatIcon from "@material-ui/icons/Chat";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 // Redux
 import { connect } from "react-redux";
+import Picture from "./Picture";
 
 const styles = {
   card: {
@@ -57,6 +56,7 @@ class Scream extends Component {
       classes,
       scream: {
         body,
+        images,
         createdAt,
         userImage,
         userHandle,
@@ -117,11 +117,7 @@ class Scream extends Component {
       <Card className={classes.card_root}>
         <CardHeader
           avatar={<Avatar alt={userHandle} src={userImage} />}
-          action={
-            <IconButton aria-label="tools">
-              <MoreVertIcon />
-            </IconButton>
-          }
+          action={<Tools />}
           title={
             <Typography
               variant="h5"
@@ -140,6 +136,9 @@ class Scream extends Component {
         />
         <CardContent>
           <Typography variant="body1">{body}</Typography>
+          <div className="picture">
+            <Picture images={images}></Picture>
+          </div>
         </CardContent>
         <CardActions>
           <LikeButton screamId={screamId} />

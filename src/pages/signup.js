@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
+import logo from "../images/logo.jpeg";
+import axios from "axios";
 
 // MUI Stuff
 import Grid from "@material-ui/core/Grid";
@@ -26,6 +29,8 @@ class signup extends Component {
       confirmPassword: "",
       username: "",
       errors: {},
+      step: 0,
+      otp: null,
     };
   }
   componentWillReceiveProps(nextProps) {
@@ -33,15 +38,36 @@ class signup extends Component {
       this.setState({ errors: nextProps.UI.errors });
     }
   }
+  verifyEmail = (event) => {
+    event.preventDefault();
+    axios.post("/otp", { email: this.state.email }).then((res) => {
+      if (res.data.success) {
+        this.setState({ title: res.data.data, step: this.state.step + 1 });
+      } else {
+        console.log(res.data.message);
+      }
+    });
+  };
+
+  submitOtp = (event) => {
+    event.preventDefault();
+    axios
+      .post("/verify", { email: this.state.email, code: this.state.otp })
+      .then((res) => {
+        if (res.data.success) {
+          this.setState({ step: this.state.step + 1 });
+        } else {
+          console.log(res.data.message);
+        }
+      });
+  };
   handleSubmit = (event) => {
     event.preventDefault();
     const newUserData = {
-      email: this.state.email + this.props.code,
+      email: this.state.email,
       password: this.state.password,
       confirmPassword: this.state.confirmPassword,
       username: this.state.username,
-      code: this.props.code,
-      title: this.props.title,
     };
     this.props.signupUser(newUserData, this.props.history);
   };
@@ -52,96 +78,170 @@ class signup extends Component {
   };
   render() {
     const {
-      code,
       classes,
       UI: { loading },
     } = this.props;
     const { errors } = this.state;
 
+    let formContainer = null;
+    switch (this.state.step) {
+      case 0:
+        formContainer = (
+          <>
+            <Typography variant="h6" className={classes.pageTitle}>
+              Sign Up
+            </Typography>
+            <form noValidate onSubmit={this.verifyEmail}>
+              <TextField
+                id="email"
+                name="email"
+                type="email"
+                label="Email"
+                className={classes.textField}
+                helperText={errors.email}
+                error={errors.email ? true : false}
+                value={this.state.email}
+                onChange={this.handleChange}
+                fullWidth
+              />
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                disabled={loading}
+              >
+                Enter
+                {loading && (
+                  <CircularProgress size={30} className={classes.progress} />
+                )}
+              </Button>
+              <br />
+              <small>
+                Already have an account ? Login <Link to="/login">here</Link>
+              </small>
+            </form>
+          </>
+        );
+        break;
+      case 1:
+        formContainer = (
+          <>
+            <Typography variant="h6" className={classes.pageTitle}>
+              Enter Verification Code
+            </Typography>
+            <form noValidate onSubmit={this.submitOtp}>
+              <TextField
+                id="otp"
+                name="otp"
+                label="Number"
+                className={classes.textField}
+                value={this.state.otp}
+                onChange={this.handleChange}
+                fullWidth
+              />
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                disabled={loading}
+              >
+                Verify
+                {loading && (
+                  <CircularProgress size={30} className={classes.progress} />
+                )}
+              </Button>
+              <br />
+              <small>
+                Already have an account ? Login <Link to="/login">here</Link>
+              </small>
+            </form>
+          </>
+        );
+        break;
+      case 2:
+        formContainer = (
+          <>
+            <Typography variant="h4" className={classes.pageTitle}>
+              SignUp
+            </Typography>
+            <form noValidate onSubmit={this.handleSubmit}>
+              <TextField
+                id="username"
+                name="username"
+                type="text"
+                label="Username"
+                className={classes.textField}
+                helperText={errors.username}
+                error={errors.username ? true : false}
+                value={this.state.username}
+                onChange={this.handleChange}
+                fullWidth
+              />
+              <TextField
+                id="password"
+                name="password"
+                type="password"
+                label="Password"
+                className={classes.textField}
+                helperText={errors.password}
+                error={errors.password ? true : false}
+                value={this.state.password}
+                onChange={this.handleChange}
+                fullWidth
+              />
+              <TextField
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                label="Confirm Password"
+                className={classes.textField}
+                helperText={errors.confirmPassword}
+                error={errors.confirmPassword ? true : false}
+                value={this.state.confirmPassword}
+                onChange={this.handleChange}
+                fullWidth
+              />
+
+              {errors.general && (
+                <Typography variant="body2" className={classes.customError}>
+                  {errors.general}
+                </Typography>
+              )}
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                disabled={loading}
+              >
+                SignUp
+                {loading && (
+                  <CircularProgress size={30} className={classes.progress} />
+                )}
+              </Button>
+              <br />
+              <small>
+                Already have an account ? Login <Link to="/login">here</Link>
+              </small>
+            </form>
+          </>
+        );
+        break;
+      default:
+        formContainer = null;
+    }
+
     return (
       <Grid container className={classes.form}>
+        <Grid item sm />
         <Grid item sm>
-          {/* <img src={AppIcon} alt="monkey" className={classes.image} />
-          <Typography variant="h2" className={classes.pageTitle}>
-            SignUp
-          </Typography> */}
-          <form noValidate onSubmit={this.handleSubmit}>
-            <TextField
-              id="email"
-              name="email"
-              type="email"
-              label="Email"
-              className={classes.textField}
-              helperText={errors.email}
-              error={errors.email ? true : false}
-              value={this.state.email}
-              onChange={this.handleChange}
-              fullWidth
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">{code}</InputAdornment>
-                ),
-              }}
-            />
-            <TextField
-              id="password"
-              name="password"
-              type="password"
-              label="Password"
-              className={classes.textField}
-              helperText={errors.password}
-              error={errors.password ? true : false}
-              value={this.state.password}
-              onChange={this.handleChange}
-              fullWidth
-            />
-            <TextField
-              id="confirmPassword"
-              name="confirmPassword"
-              type="password"
-              label="Confirm Password"
-              className={classes.textField}
-              helperText={errors.confirmPassword}
-              error={errors.confirmPassword ? true : false}
-              value={this.state.confirmPassword}
-              onChange={this.handleChange}
-              fullWidth
-            />
-            <TextField
-              id="username"
-              name="username"
-              type="text"
-              label="Username"
-              className={classes.textField}
-              helperText={errors.username}
-              error={errors.username ? true : false}
-              value={this.state.username}
-              onChange={this.handleChange}
-              fullWidth
-            />
-            {errors.general && (
-              <Typography variant="body2" className={classes.customError}>
-                {errors.general}
-              </Typography>
-            )}
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              disabled={loading}
-            >
-              SignUp
-              {loading && (
-                <CircularProgress size={30} className={classes.progress} />
-              )}
-            </Button>
-            <br />
-            {/* <small>
-              Already have an account ? Login <Link to="/login">here</Link>
-            </small> */}
-          </form>
+          <img src={logo} alt="rhapme" className={classes.image} />
+
+          {formContainer}
         </Grid>
+        <Grid item sm />
       </Grid>
     );
   }
@@ -152,8 +252,6 @@ signup.propTypes = {
   user: PropTypes.object.isRequired,
   UI: PropTypes.object.isRequired,
   signupUser: PropTypes.func.isRequired,
-  code: PropTypes.string.isRequired,
-  title: PropTypes.string,
 };
 
 const mapStateToProps = (state) => ({

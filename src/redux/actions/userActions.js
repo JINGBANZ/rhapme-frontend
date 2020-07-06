@@ -12,41 +12,35 @@ import axios from "axios";
 // input
 export const loginUser = (userData, history) => (dispatch) => {
   dispatch({ type: LOADING_UI });
-  //we dispatch a type, and we will catch the type from reducer
-  axios
-    .post("/login", userData)
-    .then((res) => {
-      setAuthorizationHeader(res.data.token);
+  axios.post("/login", userData).then((res) => {
+    if (res.data.success) {
+      console.log("success");
+      setAuthorizationHeader(res.data.data);
       dispatch(getUserData(history));
       dispatch({ type: CLEAR_ERRORS });
-    })
-    .catch((err) => {
-      if (err.response && err.response.data) {
-        dispatch({
-          type: SET_ERRORS,
-          payload: err.response.data,
-        });
-      }
-    });
+    } else {
+      dispatch({
+        type: SET_ERRORS,
+        payload: res.data.message,
+      });
+    }
+  });
 };
 // if you need to use dispatch, you need to have dispatch in your input argument.
 export const signupUser = (newUserData, history) => (dispatch) => {
   dispatch({ type: LOADING_UI });
-  axios
-    .post("/signup", newUserData)
-    .then((res) => {
-      setAuthorizationHeader(res.data.token);
+  axios.post("/signup", newUserData).then((res) => {
+    if (res.data.success) {
+      setAuthorizationHeader(res.data.data.token);
       dispatch(getUserData(history));
       dispatch({ type: CLEAR_ERRORS });
-    })
-    .catch((err) => {
-      if (err.response && err.response.data) {
-        dispatch({
-          type: SET_ERRORS,
-          payload: err.response.data,
-        });
-      }
-    });
+    } else {
+      dispatch({
+        type: SET_ERRORS,
+        payload: res.data.message,
+      });
+    }
+  });
 };
 
 export const logoutUser = () => (dispatch) => {
@@ -62,17 +56,20 @@ export const getUserData = (history) => (dispatch) => {
   axios
     .get("/user/info")
     .then((res) => {
-      dispatch({
-        type: SET_USER,
-        payload: res.data,
-      });
+      if (res.data.success) {
+        dispatch({
+          type: SET_USER,
+          payload: res.data.data,
+        });
+      } else {
+        console.log(res.data.message);
+      }
     })
     .then(() => {
       if (history !== undefined) {
         history.push("/");
       }
-    })
-    .catch((err) => console.log(err));
+    });
 
   // axios
   //   .get("/user/notifications")
@@ -86,33 +83,36 @@ export const getUserData = (history) => (dispatch) => {
 
 export const uploadImage = (formData) => (dispatch) => {
   dispatch({ type: LOADING_USER });
-  axios
-    .post("/user/image", formData)
-    .then(() => {
+  axios.post("/user/image", formData).then((res) => {
+    if (res.data.success) {
       dispatch(getUserData());
-    })
-    .catch((err) => console.log(err));
+    } else {
+      console.log(res.data.message);
+    }
+  });
 };
 
 export const editUserDetails = (userDetails) => (dispatch) => {
   dispatch({ type: LOADING_USER });
-  axios
-    .post("/user", userDetails)
-    .then(() => {
+  axios.post("/user", userDetails).then((res) => {
+    if (res.data.success) {
       dispatch(getUserData());
-    })
-    .catch((err) => console.log(err));
+    } else {
+      console.log(res.data.message);
+    }
+  });
 };
 
 export const markNotificationsRead = (notificationIds) => (dispatch) => {
-  axios
-    .post("/notifications", notificationIds)
-    .then((res) => {
+  axios.post("/notifications", notificationIds).then((res) => {
+    if (res.data.success) {
       dispatch({
         type: MARK_NOTIFICATIONS_READ,
       });
-    })
-    .catch((err) => console.log(err));
+    } else {
+      console.log(res.data.message);
+    }
+  });
 };
 
 const setAuthorizationHeader = (token) => {

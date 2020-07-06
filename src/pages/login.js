@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 // this can be used to bring in global theme, and then use it.
 import PropTypes from "prop-types";
-//built in method in React for type checking
-
+import { Link } from "react-router-dom";
+import logo from "../images/logo.jpeg";
 // MUI Stuff
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
@@ -38,7 +38,7 @@ class login extends Component {
   handleSubmit = (event) => {
     event.preventDefault();
     const userData = {
-      email: this.state.email + this.props.code,
+      email: this.state.email,
       password: this.state.password,
     };
     this.props.loginUser(userData, this.props.history);
@@ -52,7 +52,6 @@ class login extends Component {
   };
   render() {
     const {
-      code,
       classes,
       UI: { loading }, // loading is inside the UI object
     } = this.props;
@@ -64,12 +63,12 @@ class login extends Component {
         their width value, by default, they will be
         split equally and automatically. 3 items => each 33%
         4 items => each 25% */}
-
+        <Grid item sm />
         <Grid item sm>
-          {/* <img src={AppIcon} alt="logo" className={classes.image} /> */}
-          {/* <Typography variant="h2" className={classes.pageTitle}>
+          <img src={logo} alt="rhapme" className={classes.image} />
+          <Typography variant="h4" className={classes.pageTitle}>
             Login
-          </Typography> */}
+          </Typography>
           <form noValidate onSubmit={this.handleSubmit}>
             <TextField
               id="email"
@@ -82,11 +81,6 @@ class login extends Component {
               value={this.state.email}
               onChange={this.handleChange}
               fullWidth
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">{code}</InputAdornment>
-                ),
-              }}
             />
             <TextField
               id="password"
@@ -121,12 +115,12 @@ class login extends Component {
             {/* relationship between button and progress: button is relative
             and progress is absolute, so we can locate progress in the middle of button */}
             <br />
-
-            {/* <small>
+            <small>
               dont have an account ? sign up <Link to="/signup">here</Link>
-            </small> */}
+            </small>
           </form>
         </Grid>
+        <Grid item sm />
       </Grid>
     );
   }
@@ -137,13 +131,8 @@ login.propTypes = {
   loginUser: PropTypes.func.isRequired,
   user: PropTypes.object.isRequired,
   UI: PropTypes.object.isRequired,
-  code: PropTypes.string.isRequired,
 };
-//it take our global state, and we take what we need
-// all of these will be in our props, so we also define props types above
-// through this.props we can access all these object
-// all these are brought in from global state, and map into our component props
-//and they are in our props right now
+
 const mapStateToProps = (state) => ({
   user: state.user,
   UI: state.UI,
